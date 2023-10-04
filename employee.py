@@ -48,38 +48,51 @@ class Employee:
         else:
             raise ValueError("Invalid payment method")
 
+
     def __str__(self):
-        # Get the payment_type string
-        payment_type = "monthly" if self.payment_method == PaymentMethod.MONTHLY else "contract"
 
-        # Prepare payment_details message
-        payment_details = (
-            f"{self.hours_worked} hours at {self.rate}/hour"
-            if self.payment_method == PaymentMethod.HOURLY
-            else f"{self.rate}"
-        )
+        #working monthly: works on a monthly salary of x 
+        #if there is any bonus or commission , delete the last dot 
+        if self.payment_method == PaymentMethod.MONTHLY:
+  
+            # if you have the bonus commission 
+            if self.get_bonus() > 0:
+                return (
+                    f"{self.name} works on a monthly salary of {self.rate} and receives a bonus commission of {self.get_bonus()}. "
+                    f"Their total pay is {self.get_pay()}."
+                )
+            
+            # monthly and gets a commission 
+            elif self.get_commission() > 0:
+                return (
+                    f"{self.name} works on a monthly salary of {self.rate} and receives a commission for {self.commission_time} contract(s) at {self.commission_amount}/contract. "
+                    f"Their total pay is {self.get_pay()}."
+                )
+            else:
+                return (
+                    f"{self.name} works on a monthly salary of {self.rate}. "
+                    f"Their total pay is {self.get_pay()}."
+                )
+        else:
 
-        # Prepare bonus message based on whether employee gets a bonus or not
-        bonus_msg = (
-            f" and receives a bonus commission of {self.get_bonus()}."
-            if self.get_bonus() > 0
-            else ""
-        )
+            #only gets bonus 
+            if self.get_bonus() > 0:
+                return (
+                    f"{self.name} works on a contract of {self.hours_worked} hours at {self.rate}/hour and receives a bonus commission of {self.bonus_amount}. "
+                    f"Their total pay is {self.get_pay()}."
+                )
+            #only gets commission
+            elif self.get_commission() > 0:
+                return (
+                    f"{self.name} works on a contract of {self.hours_worked} hours at {self.rate}/hour and receives a commission for {self.commission_time} contract(s) at {self.commission_amount}/contract. "
+                    f"Their total pay is {self.get_pay()}."
+                )
+            else:
+                return (
+                    f"{self.name} works on a contract of {self.hours_worked} hours at {self.rate}/hour. "
+                    f"Their total pay is {self.get_pay()}."
+                )
 
-        # Prepare commission message, if get_commission more than 0, return a different string
-        commission_msg = (
-            f" and receives a commission for {self.commission_time} contract(s) at {self.commission_amount}/contract."
-            if self.get_commission() > 0
-            else ""
-        )
-
-        return (
-            f"{self.name} works on a {payment_type} salary of {payment_details}"
-            f"{bonus_msg}{commission_msg}. Their total pay is {self.get_pay()}."
-        )
-
-
-       
 
 
 # Billie works on a monthly salary of 4000.  Their total pay is 4000.
@@ -107,8 +120,4 @@ ariel.set_bonus(600)
 ariel.set_hours_worked(120)
 
 
-print(charlie)
 print(renee)
-print(jan)
-print(robbie)
-print(ariel)
